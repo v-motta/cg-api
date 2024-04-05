@@ -5,7 +5,7 @@ IMAGE_NAME="cost-guardian-api-i"
 #docker pull $IMAGE_NAME
 
 CONTAINER_NAME="cost-guardian-api-c"
-CONTAINER_PORT="9000"
+CONTAINER_PORT="5000"
 
 docker stop $CONTAINER_NAME
 docker rm $CONTAINER_NAME
