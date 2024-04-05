@@ -10,7 +10,11 @@ import (
 // Health godoc
 // @Tags Health
 // @Summary Check database connection
-// @Success 200
+// @Description Checks if the database connection is healthy by pinging the database. If the database is connected successfully, it returns a 200 status code with a success message. If the database connection fails, it returns a 500 status code with an error message.
+// @Accept  json
+// @Produce  json
+// @Success 200 {object} map[string]string "Database is connected successfully!"
+// @Failure 500 {object} map[string]string "Failed to connect to database" or "Failed to ping database"
 // @Router /health [get]
 func Health(c echo.Context) error {
 	db, err := db.Connect()

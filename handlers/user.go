@@ -10,14 +10,17 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// ShowAccount godoc
-//
-//	@Summary		Show all users
-//	@Tags			Users
-//	@Accept			json
-//	@Produce		json
-//	@Success		200	{object}	models.User
-//	@Router			/users [get]
+// GetAllUsers godoc
+// @Summary Get all users
+// @Description Fetch all users from the database
+// @Tags Users
+// @Accept  json
+// @Produce  json
+// @Security Bearer
+// @Success 200 {array} models.User
+// @Failure 500 {object} string "Failed to connect to database"
+// @Failure 500 {object} string "Failed to fetch users from database"
+// @Router /users [get]
 func GetAllUsers(c echo.Context) error {
 	db, err := db.Connect()
 	if err != nil {
@@ -49,6 +52,20 @@ func GetAllUsers(c echo.Context) error {
 	return c.JSON(http.StatusOK, users)
 }
 
+// GetUserByID godoc
+// @Summary Get a user by ID
+// @Description Get a specific user from the database by ID
+// @Tags Users
+// @Accept  json
+// @Produce  json
+// @Param id path int true "User ID"
+// @Success 200 {object} models.User
+// @Security Bearer
+// @Failure 400 {object} string "Invalid user ID"
+// @Failure 404 {object} string "User not found"
+// @Failure 500 {object} string "Failed to connect to database"
+// @Failure 500 {object} string "Failed to fetch user from database"
+// @Router /users/{id} [get]
 func GetUserByID(c echo.Context) error {
 	userID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -77,6 +94,19 @@ func GetUserByID(c echo.Context) error {
 	return c.JSON(http.StatusOK, user)
 }
 
+// CreateUser godoc
+// @Summary Create a new user
+// @Description Create a new user with the provided information
+// @Tags Users
+// @Accept  json
+// @Produce  json
+// @Param user body models.User true "User to be created"
+// @Security Bearer
+// @Success 200 {object} models.User "Successfully created user"
+// @Failure 400 {object} string "Failed to decode request body"
+// @Failure 500 {object} string "Failed to connect to database"
+// @Failure 500 {object} string "Failed to insert user into database"
+// @Router /users [post]
 func CreateUser(c echo.Context) error {
 	var user models.User
 	if err := c.Bind(&user); err != nil {
@@ -97,6 +127,21 @@ func CreateUser(c echo.Context) error {
 	return c.JSON(http.StatusCreated, user)
 }
 
+// UpdateUser godoc
+// @Summary Update an existing user
+// @Description Update an existing user with the provided information
+// @Tags Users
+// @Accept  json
+// @Produce  json
+// @Param id path int true "User ID to be updated"
+// @Security Bearer
+// @Param user body models.User true "Updated user information"
+// @Success 200 {object} models.User "Successfully updated user"
+// @Failure 400 {object} string "Invalid user ID"
+// @Failure 400 {object} string "Failed to decode request body"
+// @Failure 500 {object} string "Failed to connect to database"
+// @Failure 500 {object} string "Failed to update user in database"
+// @Router /users/{id} [put]
 func UpdateUser(c echo.Context) error {
 	userID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
@@ -123,6 +168,19 @@ func UpdateUser(c echo.Context) error {
 	return c.JSON(http.StatusOK, updatedUser)
 }
 
+// DeleteUser godoc
+// @Summary Delete a user
+// @Description Delete a user with the provided ID
+// @Tags Users
+// @Accept  json
+// @Produce  json
+// @Param id path int true "User ID to be deleted"
+// @Security Bearer
+// @Success 200 {object} string "User deleted successfully"
+// @Failure 400 {object} string "Invalid user ID"
+// @Failure 500 {object} string "Failed to connect to database"
+// @Failure 500 {object} string "Failed to delete user from database"
+// @Router /users/{id} [delete]
 func DeleteUser(c echo.Context) error {
 	userID, err := strconv.Atoi(c.Param("id"))
 	if err != nil {

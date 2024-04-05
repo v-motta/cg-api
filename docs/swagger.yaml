@@ -1,5 +1,12 @@
 basePath: /api/v1
 definitions:
+  models.AuthUser:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    type: object
   models.User:
     properties:
       email:
@@ -31,16 +38,155 @@ info:
 paths:
   /health:
     get:
+      consumes:
+      - application/json
+      description: Checks if the database connection is healthy by pinging the database.
+        If the database is connected successfully, it returns a 200 status code with
+        a success message. If the database connection fails, it returns a 500 status
+        code with an error message.
+      produces:
+      - application/json
       responses:
         "200":
-          description: OK
+          description: Database is connected successfully!
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Failed to connect to database" or "Failed to ping database
+          schema:
+            additionalProperties:
+              type: string
+            type: object
       summary: Check database connection
       tags:
       - Health
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate user and return JWT token if successful
+      parameters:
+      - description: User credentials
+        in: body
+        name: AuthUser
+        required: true
+        schema:
+          $ref: '#/definitions/models.AuthUser'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Returns the JWT token
+          schema:
+            type: string
+        "400":
+          description: Invalid request, user credentials are not provided
+          schema:
+            type: string
+        "500":
+          description: Internal server error, failed to connect to database
+          schema:
+            type: string
+      summary: User login
+      tags:
+      - Auth
   /users:
     get:
       consumes:
       - application/json
+      description: Fetch all users from the database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.User'
+            type: array
+        "500":
+          description: Failed to fetch users from database
+          schema:
+            type: string
+      security:
+      - Bearer: []
+      summary: Get all users
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Create a new user with the provided information
+      parameters:
+      - description: User to be created
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully created user
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Failed to decode request body
+          schema:
+            type: string
+        "500":
+          description: Failed to insert user into database
+          schema:
+            type: string
+      security:
+      - Bearer: []
+      summary: Create a new user
+      tags:
+      - Users
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a user with the provided ID
+      parameters:
+      - description: User ID to be deleted
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid user ID
+          schema:
+            type: string
+        "500":
+          description: Failed to delete user from database
+          schema:
+            type: string
+      security:
+      - Bearer: []
+      summary: Delete a user
+      tags:
+      - Users
+    get:
+      consumes:
+      - application/json
+      description: Get a specific user from the database by ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
       produces:
       - application/json
       responses:
@@ -48,7 +194,64 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/models.User'
-      summary: Show all users
+        "400":
+          description: Invalid user ID
+          schema:
+            type: string
+        "404":
+          description: User not found
+          schema:
+            type: string
+        "500":
+          description: Failed to fetch user from database
+          schema:
+            type: string
+      security:
+      - Bearer: []
+      summary: Get a user by ID
       tags:
       - Users
+    put:
+      consumes:
+      - application/json
+      description: Update an existing user with the provided information
+      parameters:
+      - description: User ID to be updated
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated user information
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/models.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully updated user
+          schema:
+            $ref: '#/definitions/models.User'
+        "400":
+          description: Failed to decode request body
+          schema:
+            type: string
+        "500":
+          description: Failed to update user in database
+          schema:
+            type: string
+      security:
+      - Bearer: []
+      summary: Update an existing user
+      tags:
+      - Users
+schemes:
+- http
+securityDefinitions:
+  Bearer:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
