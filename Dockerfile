@@ -1,9 +1,6 @@
 # Start from the latest golang base image
 FROM golang:latest
 
-# Add Maintainer Info
-LABEL maintainer="Vinicius Motta <viniciusmotta0806@gmail.com>"
-
 # Set the Current Working Directory inside the container
 WORKDIR /app
 
