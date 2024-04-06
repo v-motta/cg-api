@@ -69,5 +69,5 @@ func main() {
 	g.PUT("/users/:id", handlers.UpdateUser)
 	g.DELETE("/users/:id", handlers.DeleteUser)
 
-	e.Logger.Fatal(e.Start(":9000"))
+	e.Logger.Fatal(e.Start(":5000"))
 }
