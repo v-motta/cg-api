@@ -400,7 +400,7 @@ var SwaggerInfo = &swag.Spec{
 	Version:          "1.0",
 	Host:             "api.cost.vmotta.dev",
 	BasePath:         "/api/v1",
-	Schemes:          []string{"http"},
+	Schemes:          []string{"https"},
 	Title:            "Cost Guardian API",
 	Description:      "This is a sample server Cost Guardian server.",
 	InfoInstanceName: "swagger",

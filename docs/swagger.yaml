@@ -248,7 +248,7 @@ paths:
       tags:
       - Users
 schemes:
-- http
+- https
 securityDefinitions:
   Bearer:
     in: header

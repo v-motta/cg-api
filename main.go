@@ -26,7 +26,7 @@ import (
 // @host api.cost.vmotta.dev
 // @BasePath /api/v1
 
-// @schemes http
+// @schemes https
 // @Produces  application/json
 // @Consumes  application/json
 
