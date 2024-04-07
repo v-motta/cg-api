@@ -18,7 +18,7 @@
         },
         "version": "1.0"
     },
-    "host": "localhost:9000",
+    "host": "api.cost.vmotta.dev",
     "basePath": "/api/v1",
     "paths": {
         "/health": {

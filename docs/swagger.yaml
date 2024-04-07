@@ -22,7 +22,7 @@ definitions:
       username:
         type: string
     type: object
-host: localhost:9000
+host: api.cost.vmotta.dev
 info:
   contact:
     email: support@swagger.io
