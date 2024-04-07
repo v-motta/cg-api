@@ -50,6 +50,8 @@ func main() {
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 
+	g.GET("/ping", handlers.Ping)
+
 	// @router /login [post]
 	// @Security ApiKeyAuth
 	g.POST("/login", handlers.Login)
