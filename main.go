@@ -56,14 +56,14 @@ func main() {
 	// @Security ApiKeyAuth
 	g.POST("/login", handlers.Login)
 
+	// @router /health [get]
+	// @security ApiKeyAuth
+	g.GET("/health", handlers.Health)
+
 	// @router /swagger/* [get]
 	g.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	g.Use(echojwt.JWT([]byte("secret")))
-
-	// @router /health [get]
-	// @security ApiKeyAuth
-	g.GET("/health", handlers.Health)
 
 	g.GET("/users", handlers.GetAllUsers)
 	g.GET("/users/:id", handlers.GetUserByID)
