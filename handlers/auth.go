@@ -22,6 +22,10 @@ import (
 // @Failure 500 {object} string "Internal server error, failed to connect to database"
 // @Router /login [post]
 func Login(c echo.Context) error {
+	if c.Request().Method != http.MethodPost {
+		return echo.NewHTTPError(http.StatusMethodNotAllowed, "Method not allowed")
+	}
+
 	var user models.AuthUser
 	if err := c.Bind(&user); err != nil {
 		return err
