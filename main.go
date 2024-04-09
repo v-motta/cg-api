@@ -53,11 +53,9 @@ func main() {
 	g.GET("/ping", handlers.Ping)
 
 	// @router /login [post]
-	// @Security ApiKeyAuth
 	g.POST("/login", handlers.Login)
 
 	// @router /health [get]
-	// @security ApiKeyAuth
 	g.GET("/health", handlers.Health)
 
 	// @router /swagger/* [get]
