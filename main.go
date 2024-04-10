@@ -24,7 +24,6 @@ import (
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
 
 // @host api.cost.vmotta.dev
-// @BasePath /api/v1
 
 // @schemes https
 // @Produces  application/json
@@ -38,34 +37,34 @@ import (
 func main() {
 	e := echo.New()
 
-	g := e.Group("/api/v1")
-
-	g.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: `[${time_rfc3339}]  ${status}  ${method}  ${host}${path} ${latency_human}` + "\n",
 	}))
-	g.Use(middleware.Recover())
+	e.Use(middleware.Recover())
 
-	g.Use(middleware.CORSWithConfig(middleware.CORSConfig{
+	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"*"},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 
 	// @router /login [post]
-	g.POST("/login", handlers.Login)
+	e.POST("/login", handlers.Login)
 
 	// @router /health [get]
-	g.GET("/health", handlers.Health)
+	e.GET("/health", handlers.Health)
 
 	// @router /swagger/* [get]
-	g.GET("/swagger/*", echoSwagger.WrapHandler)
+	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	g.Use(echojwt.JWT([]byte("secret")))
+	r := e.Group("/api/v1")
 
-	g.GET("/users", handlers.GetAllUsers)
-	g.GET("/users/:id", handlers.GetUserByID)
-	g.POST("/users", handlers.CreateUser)
-	g.PUT("/users/:id", handlers.UpdateUser)
-	g.DELETE("/users/:id", handlers.DeleteUser)
+	r.Use(echojwt.JWT([]byte("secret")))
+
+	r.GET("/users", handlers.GetAllUsers)
+	r.GET("/users/:id", handlers.GetUserByID)
+	r.POST("/users", handlers.CreateUser)
+	r.PUT("/users/:id", handlers.UpdateUser)
+	r.DELETE("/users/:id", handlers.DeleteUser)
 
 	e.Logger.Fatal(e.Start(":5000"))
 }
