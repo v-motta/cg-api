@@ -2,6 +2,8 @@ package main
 
 import (
 	"cost-guardian-api/handlers"
+	"fmt"
+	"os"
 
 	echojwt "github.com/labstack/echo-jwt"
 	"github.com/labstack/echo/v4"
@@ -77,6 +79,12 @@ func main() {
 	g.POST("/users", handlers.CreateUser)
 	g.PUT("/users/:id", handlers.UpdateUser)
 	g.DELETE("/users/:id", handlers.DeleteUser)
+
+	fmt.Println("host: ", os.Getenv("DB_HOST"))
+	fmt.Println("port: ", os.Getenv("DB_PORT"))
+	fmt.Println("user: ", os.Getenv("DB_USER"))
+	fmt.Println("dbname: ", os.Getenv("DB_NAME"))
+	fmt.Println("sslmode: ", os.Getenv("DB_SSLMODE"))
 
 	e.Logger.Fatal(e.Start(":5000"))
 }
