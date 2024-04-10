@@ -55,7 +55,7 @@ func main() {
 	g.Use(echojwt.WithConfig(echojwt.Config{
 		SigningKey: []byte("secret"),
 		Skipper: func(c echo.Context) bool {
-			if c.Path() == "/api/v1/login" || c.Path() == "/api/v1/health" || c.Path() == "/api/v1/swagger/*" || c.Path() == "/signup" {
+			if c.Path() == "/api/v1/login" || c.Path() == "/api/v1/health" || c.Path() == "/api/v1/swagger/*" || c.Path() == "/api/v1/signup" {
 				return true
 			}
 			return false

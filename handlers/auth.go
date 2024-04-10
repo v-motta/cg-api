@@ -61,5 +61,5 @@ func Login(c echo.Context) error {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, map[string]string{"token": t})
+	return c.JSON(http.StatusOK, map[string]string{"token": t, "username": storedUser.Username})
 }
