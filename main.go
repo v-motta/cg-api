@@ -50,16 +50,27 @@ func main() {
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept},
 	}))
 
+	g.Use(echojwt.WithConfig(echojwt.Config{
+		SigningKey: []byte("secret"),
+		Skipper: func(c echo.Context) bool {
+			if c.Path() == "/api/v1/login" || c.Path() == "/api/v1/health" || c.Path() == "/api/v1/swagger/*" || c.Path() == "/signup" {
+				return true
+			}
+			return false
+		},
+	}))
+
 	// @router /login [post]
 	g.POST("/login", handlers.Login)
+
+	// @router /signup [post]
+	g.POST("/signup", handlers.Login)
 
 	// @router /health [get]
 	g.GET("/health", handlers.Health)
 
 	// @router /swagger/* [get]
 	g.GET("/swagger/*", echoSwagger.WrapHandler)
-
-	g.Use(echojwt.JWT([]byte("secret")))
 
 	g.GET("/users", handlers.GetAllUsers)
 	g.GET("/users/:id", handlers.GetUserByID)
