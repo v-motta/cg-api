@@ -66,7 +66,7 @@ func main() {
 	g.POST("/login", handlers.Login)
 
 	// @router /signup [post]
-	g.POST("/signup", handlers.Login)
+	g.POST("/signup", handlers.Signup)
 
 	// @router /health [get]
 	g.GET("/health", handlers.Health)
@@ -76,7 +76,6 @@ func main() {
 
 	g.GET("/users", handlers.GetAllUsers)
 	g.GET("/users/:id", handlers.GetUserByID)
-	g.POST("/users", handlers.CreateUser)
 	g.PUT("/users/:id", handlers.UpdateUser)
 	g.DELETE("/users/:id", handlers.DeleteUser)
 

@@ -1,4 +1,4 @@
-package handlers
+package helpers
 
 import (
 	"fmt"
@@ -11,18 +11,18 @@ func HashPassword(password string) (string, error) {
 	return string(bytes), err
 }
 
-func ChechPasswordHash(password, hash string) bool {
+func CheckPasswordHash(password, hash string) bool {
 	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
 	return err == nil
 }
 
 func TestPassword() {
-	password := "secret"
+	password := "VmC@SnP777"
 	hash, _ := HashPassword(password)
 
 	fmt.Println("Password:", password)
 	fmt.Println("Hash:", hash)
 
-	match := ChechPasswordHash(password, hash)
+	match := CheckPasswordHash(password, hash)
 	fmt.Println("Match:", match)
 }

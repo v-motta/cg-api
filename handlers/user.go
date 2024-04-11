@@ -94,39 +94,6 @@ func GetUserByID(c echo.Context) error {
 	return c.JSON(http.StatusOK, user)
 }
 
-// CreateUser godoc
-// @Summary Create a new user
-// @Description Create a new user with the provided information
-// @Tags Users
-// @Accept  json
-// @Produce  json
-// @Param user body models.User true "User to be created"
-// @Security Bearer
-// @Success 200 {object} models.User "Successfully created user"
-// @Failure 400 {object} string "Failed to decode request body"
-// @Failure 500 {object} string "Failed to connect to database"
-// @Failure 500 {object} string "Failed to insert user into database"
-// @Router /users [post]
-func CreateUser(c echo.Context) error {
-	var user models.User
-	if err := c.Bind(&user); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, "Failed to decode request body")
-	}
-
-	db, err := db.Connect()
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to connect to database")
-	}
-	defer db.Close()
-
-	_, err = db.Exec("INSERT INTO users (name, username, email, password) VALUES ($1, $2, $3, $4)", user.Name, user.Username, user.Email, user.Password)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to insert user into database")
-	}
-
-	return c.JSON(http.StatusCreated, user)
-}
-
 // UpdateUser godoc
 // @Summary Update an existing user
 // @Description Update an existing user with the provided information
