@@ -55,7 +55,7 @@ func main() {
 	g.Use(echojwt.WithConfig(echojwt.Config{
 		SigningKey: []byte("secret"),
 		Skipper: func(c echo.Context) bool {
-			if c.Path() == "/api/v1/login" || c.Path() == "/api/v1/health" || c.Path() == "/api/v1/swagger/*" || c.Path() == "/api/v1/signup" {
+			if c.Path() == "/api/v1/login" || c.Path() == "/api/v1/health" || c.Path() == "/api/v1/swagger/*" || c.Path() == "/api/v1/signup" || c.Path() == "/api/v1/send-email" {
 				return true
 			}
 			return false
@@ -73,6 +73,9 @@ func main() {
 
 	// @router /swagger/* [get]
 	g.GET("/swagger/*", echoSwagger.WrapHandler)
+
+	// @router /send-email [get]
+	g.GET("/send-email", handlers.SendEmail)
 
 	g.GET("/users", handlers.GetAllUsers)
 	g.GET("/users/:id", handlers.GetUserByID)

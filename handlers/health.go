@@ -17,9 +17,6 @@ import (
 // @Failure 500 {object} map[string]string "Failed to connect to database" or "Failed to ping database"
 // @Router /health [get]
 func Health(c echo.Context) error {
-
-	SendEmail()
-
 	db, err := db.Connect()
 	if err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to connect to database")
