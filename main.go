@@ -75,7 +75,7 @@ func main() {
 	g.GET("/swagger/*", echoSwagger.WrapHandler)
 
 	// @router /send-email [get]
-	g.GET("/send-email", handlers.SendEmail)
+	g.POST("/send-email", handlers.SendEmail)
 
 	g.GET("/users", handlers.GetAllUsers)
 	g.GET("/users/:id", handlers.GetUserByID)
