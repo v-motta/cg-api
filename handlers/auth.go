@@ -64,7 +64,7 @@ func Login(c echo.Context) error {
 		return err
 	}
 
-	return c.JSON(http.StatusOK, map[string]string{"token": t, "username": storedUser.Username})
+	return c.JSON(http.StatusOK, map[string]string{"token": t, "name": storedUser.Name, "username": storedUser.Username})
 }
 
 // CreateUser godoc
