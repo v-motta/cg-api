@@ -35,7 +35,7 @@ func Login(c echo.Context) error {
 	defer db.Close()
 
 	var storedUser models.User
-	err = db.QueryRow("SELECT username, password, role FROM users WHERE username=$1", user.Username).Scan(&storedUser.Username, &storedUser.Password, &storedUser.Role)
+	err = db.QueryRow("SELECT name, username, password, role FROM users WHERE username=$1", user.Username).Scan(&storedUser.Name, &storedUser.Username, &storedUser.Password, &storedUser.Role)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return c.JSON(http.StatusUnauthorized, map[string]string{"message": "Invalid username or password"})
