@@ -1,12 +1,15 @@
 package handlers
 
 import (
+	"cost-guardian-api/db"
 	"cost-guardian-api/models"
+	"database/sql"
 	"fmt"
 	"net/http"
 	"net/smtp"
 	"os"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
@@ -21,14 +24,27 @@ func SendEmail(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "Failed to decode request body")
 	}
 
+	db, err := db.Connect()
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to connect to database")
+	}
+	defer db.Close()
+
+	var storedUser models.User
+	err = db.QueryRow("SELECT name, username, email FROM users WHERE email=$1", mail.Email).Scan(&storedUser.Name, &storedUser.Username, &storedUser.Email)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return c.JSON(http.StatusUnauthorized, map[string]string{"message": "User not found with this email address"})
+		}
+		return err
+	}
+
 	to := []string{
 		mail.Email,
 	}
 
 	smtpHost := "smtp.gmail.com"
 	smtpPort := "587"
-
-	// message := []byte("Subject: Cost Guardian\n\n" + mail.Message)
 
 	subject := "Redefinição de senha"
 	body := `<!DOCTYPE html>
@@ -54,7 +70,7 @@ func SendEmail(c echo.Context) error {
 			<table cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; margin: auto; background-color: #fff; border-radius: 5px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.4);">
 				<tr>
 					<td style="padding: 20px;">
-						<p>Oi, [username]:</p>
+						<p>Oi, ` + storedUser.Name + `,</p>
 						<p style="padding-bottom: 20px">Você solicitou uma redefinição de senha para sua conta. Clique no botão abaixo para redefinir sua senha:</p>
 						<a href="[Inserir Link de Redefinição]">Redefinir senha</a>
 						<p style="padding-top: 20px">Se você não solicitou isso, pode ignorar este e-mail com segurança.</p>
@@ -69,11 +85,16 @@ func SendEmail(c echo.Context) error {
 
 	auth := smtp.PlainAuth("", from, password, smtpHost)
 
-	err := smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, message)
+	err = smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, message)
 	if err != nil {
 		fmt.Println(err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to send email")
 	}
 
 	return echo.NewHTTPError(http.StatusOK, "Email sent successfully!")
+}
+
+func GenerateLink() string {
+	uid := uuid.New()
+	return "https://yourwebsite.com/resetpassword/" + uid.String()
 }
