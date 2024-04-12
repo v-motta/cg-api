@@ -9,7 +9,6 @@ import (
 	"net/smtp"
 	"os"
 
-	"github.com/google/uuid"
 	"github.com/labstack/echo/v4"
 )
 
@@ -92,9 +91,4 @@ func SendEmail(c echo.Context) error {
 	}
 
 	return echo.NewHTTPError(http.StatusOK, "Email sent successfully!")
-}
-
-func GenerateLink() string {
-	uid := uuid.New()
-	return "https://yourwebsite.com/resetpassword/" + uid.String()
 }

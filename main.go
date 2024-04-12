@@ -87,8 +87,6 @@ func main() {
 	fmt.Println("user: ", os.Getenv("DB_USER"))
 	fmt.Println("dbname: ", os.Getenv("DB_NAME"))
 	fmt.Println("sslmode: ", os.Getenv("DB_SSLMODE"))
-	fmt.Println("email: ", os.Getenv("EMAIL_ADDRESS"))
-	fmt.Println("password: ", os.Getenv("EMAIL_PASSWORD"))
 
 	e.Logger.Fatal(e.Start(":5000"))
 }
