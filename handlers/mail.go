@@ -33,7 +33,7 @@ func SendEmail(c echo.Context) error {
 	err = db.QueryRow("SELECT name, username, email FROM users WHERE email=$1", mail.Email).Scan(&storedUser.Name, &storedUser.Username, &storedUser.Email)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return c.JSON(http.StatusUnauthorized, map[string]string{"message": "User not found with this email address"})
+			return c.JSON(http.StatusNotFound, map[string]string{"message": "User not found with this email address"})
 		}
 		return err
 	}
@@ -86,7 +86,6 @@ func SendEmail(c echo.Context) error {
 
 	err = smtp.SendMail(smtpHost+":"+smtpPort, auth, from, to, message)
 	if err != nil {
-		fmt.Println(err)
 		return echo.NewHTTPError(http.StatusInternalServerError, "Failed to send email")
 	}
 
